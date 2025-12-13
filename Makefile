@@ -1,6 +1,7 @@
 LINKERFLAGS = -X main.Version=`git describe --tags --always --dirty` -X main.BuildTimestamp=`date -u '+%Y-%m-%d_%I:%M:%S_UTC'`
 PROJECTROOT = $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 DBPATH	=	$(PROJECTROOT)db/
+NANE	=	felix
 
 all: clean build
 
@@ -15,7 +16,7 @@ generate:
 	@echo Running generate job...
 	
 
-build: dep #generate
+build: #dep generate
 	@echo Running build job...
 	mkdir -p bin/linux/arm bin/linux/x64 bin/windows bin/mac/x64 bin/mac/arm
 	GOOS=linux GOARCH=arm64 go build  -ldflags "$(LINKERFLAGS)" -o bin/linux/arm ./...
@@ -59,4 +60,4 @@ stopdb:
 	pg_ctl stop -D $(DBPATH) -m fast
 
 recreatetables:
-	psql felix -U felixapp -f scripts/create-tables.sql
+	psql $(NAME) -U $(NAME)app -f scripts/create-tables.sql
