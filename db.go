@@ -6,11 +6,13 @@ import (
 	"log"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type PostgresSink struct {
 	config *Config
-	db     *pgx.Conn
+	//db     *pgx.Conn
+	db *pgxpool.Pool
 }
 
 func NewPostgresSink(cfg *Config) (*PostgresSink, error) {
@@ -43,13 +45,15 @@ func NewPostgresSink(cfg *Config) (*PostgresSink, error) {
 		err = fmt.Errorf("No PostgresQL database name given")
 	}
 	if err == nil {
-		s.db, err = pgx.Connect(context.Background(), dbinfo)
+		//s.db, err = pgx.Connect(context.Background(), dbinfo)
+		s.db, err = pgxpool.New(context.Background(), dbinfo)
 		if err != nil {
 			log.Println("Cannot open PostgresQL database: %v", err)
 		}
 		cfg.AddCleanUpFn(func() error {
 			log.Println("Cleanup - closing PostgreSQL database connection")
-			return s.db.Close(context.Background())
+			s.db.Close()
+			return nil
 		})
 		log.Println("Established PostgreSQL database connection")
 	} else {
@@ -90,13 +94,25 @@ func (s *PostgresSink) GetUserRegistrations() ([]User, error) {
 	return users, nil
 }
 
-func (s *PostgresSink) PutuserRegistration(u *User) {
+func (s *PostgresSink) PutuserRegistration(u *User) error {
 	log.Println("Writing user registration to PostgresDB: %+v", u)
 
-	_, err := s.db.Exec(context.Background(),
-		"INSERT INTO users (firstname, lastname,email) VALUES ($1, $3, $2)", u.FirstName, u.LastName, u.Email)
-
+	ctx := context.Background()
+	tx, err := s.db.BeginTx(ctx, pgx.TxOptions{})
 	if err != nil {
-		log.Printf("Cannot store USER in PostgresQL database: %v \n", err)
+		log.Printf("starting transaction: %w", err)
+		return err
 	}
+	defer tx.Rollback(ctx)
+
+	if _, err = tx.Exec(context.Background(), "INSERT INTO users (firstname, lastname,email) VALUES ($1, $3, $2)", u.FirstName, u.LastName, u.Email); err != nil {
+		log.Printf("Cannot insert USER into PostgresQL database: %v \n", err)
+		return err
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		return fmt.Errorf("committing transaction: %w", err)
+	}
+
+	return nil
 }

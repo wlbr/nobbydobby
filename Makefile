@@ -1,7 +1,7 @@
 LINKERFLAGS = -X main.Version=`git describe --tags --always --dirty` -X main.BuildTimestamp=`date -u '+%Y-%m-%d_%I:%M:%S_UTC'`
 PROJECTROOT = $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 DBPATH	=	$(PROJECTROOT)db/
-NANE	=	felix
+NAME	=	felix
 
 all: clean build
 
