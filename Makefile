@@ -37,9 +37,11 @@ coverage: test
 	@echo Running coverage job...
 	go tool cover -html=coverage.txt
 
-createdata:
+datacreate:
 	./scripts/createdata.sh
 
+dataread:
+	curl http://localhost:3000/
 
 
 initdb:   
