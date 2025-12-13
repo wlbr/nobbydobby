@@ -71,6 +71,14 @@ func (s *PostgresSink) GetUserRegistrations() ([]User, error) {
         SELECT id, firstname, lastname, email
         FROM users`
 
+	ctx := context.Background()
+	tx, err := s.db.BeginTx(ctx, pgx.TxOptions{})
+	if err != nil {
+		log.Printf("starting transaction: %w", err)
+		return nil, err
+	}
+	defer tx.Rollback(ctx)
+
 	rows, err := s.db.Query(context.Background(), sql)
 	if err != nil {
 		return nil, fmt.Errorf("error querying tasks: %w", err)
@@ -89,6 +97,10 @@ func (s *PostgresSink) GetUserRegistrations() ([]User, error) {
 			return nil, fmt.Errorf("error scanning user row: %w", err)
 		}
 		users = append(users, u)
+	}
+
+	if err = tx.Commit(ctx); err != nil {
+		return nil, fmt.Errorf("error committing transaction: %w", err)
 	}
 
 	return users, nil
