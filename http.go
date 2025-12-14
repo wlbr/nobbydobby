@@ -12,7 +12,7 @@ import (
 
 type webserver struct {
 	cfg *Config
-	db  *PostgresSink
+	db  database
 	r   *chi.Mux
 }
 
@@ -42,7 +42,7 @@ func (s *webserver) Register(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Registered!!"))
 }
 
-func RunRestserver(cfg *Config, db *PostgresSink) {
+func RunRestserver(cfg *Config, db database) {
 	log.Println("Starting REST server")
 	webserver := &webserver{cfg: cfg, db: db, r: chi.NewRouter()}
 

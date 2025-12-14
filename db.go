@@ -48,7 +48,7 @@ func NewPostgresSink(cfg *Config) (*PostgresSink, error) {
 		//s.db, err = pgx.Connect(context.Background(), dbinfo)
 		s.db, err = pgxpool.New(context.Background(), dbinfo)
 		if err != nil {
-			log.Println("Cannot open PostgresQL database: %v", err)
+			log.Printf("Cannot open PostgresQL database: %v", err)
 		}
 		cfg.AddCleanUpFn(func() error {
 			log.Println("Cleanup - closing PostgreSQL database connection")
@@ -74,7 +74,7 @@ func (s *PostgresSink) GetUserRegistrations() ([]User, error) {
 	ctx := context.Background()
 	tx, err := s.db.BeginTx(ctx, pgx.TxOptions{})
 	if err != nil {
-		log.Printf("starting transaction: %w", err)
+		log.Printf("starting transaction: %v", err)
 		return nil, err
 	}
 	defer tx.Rollback(ctx)
@@ -107,17 +107,17 @@ func (s *PostgresSink) GetUserRegistrations() ([]User, error) {
 }
 
 func (s *PostgresSink) PutuserRegistration(u *User) error {
-	log.Println("Writing user registration to PostgresDB: %+v", u)
+	log.Printf("Writing user registration to PostgresDB: %+v", u)
 
 	ctx := context.Background()
 	tx, err := s.db.BeginTx(ctx, pgx.TxOptions{})
 	if err != nil {
-		log.Printf("starting transaction: %w", err)
+		log.Printf("starting transaction: %v", err)
 		return err
 	}
 	defer tx.Rollback(ctx)
 
-	if _, err = tx.Exec(context.Background(), "INSERT INTO users (firstname, lastname,email) VALUES ($1, $3, $2)", u.FirstName, u.LastName, u.Email); err != nil {
+	if _, err = tx.Exec(context.Background(), "INSERT INTO users (firstname, lastname,email) VALUES ($1, $2, $3)", u.FirstName, u.LastName, u.Email); err != nil {
 		log.Printf("Cannot insert USER into PostgresQL database: %v \n", err)
 		return err
 	}
