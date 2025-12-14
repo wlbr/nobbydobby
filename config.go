@@ -8,6 +8,9 @@ import (
 type Config struct {
 	ConfigFileName string
 	cleanup        []func() error
+	Name           string
+	Version        string
+	BuildTimestamp string
 
 	PostgreSQL struct {
 		Host     string
@@ -16,6 +19,16 @@ type Config struct {
 		User     string
 		Password string
 	}
+}
+
+func NewConfig(name, version, buildTimestamp string) *Config {
+	cfg := &Config{Name: name, Version: version, BuildTimestamp: buildTimestamp}
+	cfg.PostgreSQL.Host = "localhost"
+	cfg.PostgreSQL.Port = "5432"
+	cfg.PostgreSQL.Database = Name
+	cfg.PostgreSQL.User = Name + "app"
+	cfg.PostgreSQL.Password = ""
+	return cfg
 }
 
 func (cfg *Config) CleanUp() {

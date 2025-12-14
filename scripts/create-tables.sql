@@ -1,4 +1,4 @@
---psql felix -U felixapp -f create-tables.sql
+--psql nobbydobby -U nobbydobbyapp -f create-tables.sql
 
 DROP TABLE IF EXISTS users CASCADE;
 
@@ -11,6 +11,6 @@ CREATE TABLE users (
 
 
 ALTER TABLE users
-  OWNER TO felixapp;
+  OWNER TO nobbydobbyapp;
 
 

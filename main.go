@@ -4,14 +4,15 @@ import (
 	"log"
 )
 
+var (
+	Name           = "unknown"
+	Version        = "0.0.0-dev"
+	BuildTimestamp = "unknown"
+)
+
 func main() {
-	cfg := &Config{}
+	cfg := NewConfig(Name, Version, BuildTimestamp)
 	defer cfg.CleanUp()
-	cfg.PostgreSQL.Host = "localhost"
-	cfg.PostgreSQL.Port = "5432"
-	cfg.PostgreSQL.Database = "felix"
-	cfg.PostgreSQL.User = "felixapp"
-	cfg.PostgreSQL.Password = ""
 
 	db, err := NewPostgresSink(cfg)
 	if err != nil {

@@ -1,7 +1,9 @@
-LINKERFLAGS = -X main.Version=`git describe --tags --always --dirty` -X main.BuildTimestamp=`date -u '+%Y-%m-%d_%I:%M:%S_UTC'`
+NAME	=	nobbydobby
+LINKERFLAGS = -X main.Name=$(NAME) -X main.Version=`git describe --tags --always --dirty` -X main.BuildTimestamp=`date -u '+%Y-%m-%d_%I:%M:%S_UTC'`
 PROJECTROOT = $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 DBPATH	=	$(PROJECTROOT)db/
-NAME	=	felix
+
+
 
 all: clean build
 
@@ -26,7 +28,7 @@ build: #dep generate
 	GOOS=darwin GOARCH=arm64 go build  -ldflags "$(LINKERFLAGS)" -o bin/mac/arm ./...
 
 run: #generate
-	go run -ldflags "$(LINKERFLAGS)" *.go
+	go run -ldflags "$(LINKERFLAGS)" ./...
 
 test: recreatetables
 #	go run -ldflags "$(LINKERFLAGS)" main.go -cfg cselo-local.ini -import data/test.log

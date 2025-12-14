@@ -1,20 +1,20 @@
 -- psql postgres -f create-db.sql
 
 
-DROP DATABASE IF EXISTS felix;
+DROP DATABASE IF EXISTS nobbydobby;
 
-DROP ROLE IF EXISTS felix;
+DROP ROLE IF EXISTS nobbydobby;
 
-CREATE ROLE felixapp LOGIN CREATEDB;
+CREATE ROLE nobbydobbyapp LOGIN CREATEDB;
 
-CREATE DATABASE felix
-  WITH OWNER = felixapp
+CREATE DATABASE nobbydobby
+  WITH OWNER = nobbydobbyapp
        ENCODING = 'UTF8'
        TABLESPACE = pg_default
        LC_COLLATE = 'de_DE.UTF-8'
        LC_CTYPE = 'de_DE.UTF-8'
        CONNECTION LIMIT = -1;
        
-GRANT ALL ON DATABASE felix TO felixapp;
+GRANT ALL ON DATABASE nobbydobby TO nobbydobbyapp;
 
-REVOKE ALL ON DATABASE felix FROM public;
+REVOKE ALL ON DATABASE nobbydobby FROM public;

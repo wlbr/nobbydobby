@@ -6,12 +6,8 @@ import (
 )
 
 func TestGetUserRegistrations(t *testing.T) {
-	cfg := &Config{}
-	cfg.PostgreSQL.Host = "localhost"
-	cfg.PostgreSQL.Port = "5432"
-	cfg.PostgreSQL.Database = "felix"
-	cfg.PostgreSQL.User = "felixapp"
-	cfg.PostgreSQL.Password = ""
+	cfg := NewConfig(Name, Version, BuildTimestamp)
+	defer cfg.CleanUp()
 
 	db, err := NewPostgresSink(cfg)
 	if err != nil {
