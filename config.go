@@ -6,7 +6,7 @@ import (
 )
 
 type Config struct {
-	ConfigFileName string
+	//ConfigFileName string
 	cleanup        []func() error
 	Name           string
 	Version        string
