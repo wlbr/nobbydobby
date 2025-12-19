@@ -2,6 +2,7 @@ NAME	=	nobbydobby
 LINKERFLAGS = -X main.Name=$(NAME) -X main.Version=`git describe --tags --always --dirty` -X main.BuildTimestamp=`date -u '+%Y-%m-%d_%I:%M:%S_UTC'`
 PROJECTROOT = $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 DBPATH	=	$(PROJECTROOT)db/
+PGPATH = $(shell which postgres)
 
 
 
@@ -50,15 +51,15 @@ initdb:
 	rm -rf $(DBPATH)
 	mkdir -p $(DBPATH)
 	initdb -D $(DBPATH)
-	make startdb
+	make startdb &
 	sleep 2
 	psql postgres -f scripts/create-db.sql
 	make recreatetables
 
 startdb:
-	postgres -D $(DBPATH)
+	#postgres -D $(DBPATH)
 	#osascript -e 'tell app "Terminal" to do script "postgres -D $(DBPATH)"'
-	#execInNewITerm "postgres -D $(DBPATH)"
+	osascript -e 'tell application "iTerm"  to create window with default profile command "$(PGPATH) -D $(DBPATH)"'
 
 stopdb:
 	pg_ctl stop -D $(DBPATH) -m fast
