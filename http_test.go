@@ -21,6 +21,8 @@ func (m *mockDB) PutuserRegistration(u *User) error {
 	return nil
 }
 
+func (m *mockDB) Close() {}
+
 func TestGetRegistrations(t *testing.T) {
 	db := &mockDB{
 		users: []User{

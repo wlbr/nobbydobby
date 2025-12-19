@@ -2,7 +2,7 @@ NAME	=	nobbydobby
 LINKERFLAGS = -X main.Name=$(NAME) -X main.Version=`git describe --tags --always --dirty` -X main.BuildTimestamp=`date -u '+%Y-%m-%d_%I:%M:%S_UTC'`
 PROJECTROOT = $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 DBPATH	=	$(PROJECTROOT)db/
-PGPATH = $(shell which postgres)
+PGEXE = $(shell which postgres)
 
 
 
@@ -11,9 +11,9 @@ all: clean build
 .PHONY: clean release
 clean:
 	@echo Running clean job...
-	rm -f coverage.txt
-	rm -rf bin/ release/
-	rm -f main
+	rm -f coverage.txt main
+	rm -rf bin/ release/ db/
+	rm -f *.json *.db
 
 generate:
 	@echo Running generate job...
@@ -34,7 +34,7 @@ run: #generate
 test: recreatetables
 #	go run -ldflags "$(LINKERFLAGS)" main.go -cfg cselo-local.ini -import data/test.log
 	@echo Running test job...
-	go test ./... -cover -coverprofile=coverage.txt
+	go test  ./... -cover -coverprofile=coverage.txt
 
 coverage: test
 	@echo Running coverage job...
@@ -58,8 +58,8 @@ initdb:
 
 startdb:
 	#postgres -D $(DBPATH)
-	#osascript -e 'tell app "Terminal" to do script "postgres -D $(DBPATH)"'
-	osascript -e 'tell application "iTerm"  to create window with default profile command "$(PGPATH) -D $(DBPATH)"'
+	#osascript -e 'tell app "Terminal" to do script "$(PGEXE) -D $(DBPATH)"'
+	osascript -e 'tell application "iTerm"  to create window with default profile command "$(PGEXE) -D $(DBPATH)"'
 
 stopdb:
 	pg_ctl stop -D $(DBPATH) -m fast

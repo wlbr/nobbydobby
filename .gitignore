@@ -17,6 +17,7 @@ _test
 
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
+.vscode/
 
 *.cgo1.go
 *.cgo2.c
@@ -33,9 +34,6 @@ _testmain.go
 *.dylib
 *.test
 *.prof
-main
-cselo
-eloupd
 
 #ide stuff
 *.sublime-workspace
@@ -49,11 +47,11 @@ eloupd
 bin/
 release/
 data/
-db/
 README.html
 coverage.txt
 
-cselo.ini
 *.ini
-disco
-initialize-new-instance.sh
+
+db/
+*.json
+*.db

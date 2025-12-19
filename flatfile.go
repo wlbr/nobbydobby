@@ -77,3 +77,7 @@ func (db *FlatFileDB) writeStore(users []User) error {
 	}
 	return os.WriteFile(db.path, data, 0644)
 }
+
+func (db *FlatFileDB) Close() {
+
+}

@@ -11,6 +11,8 @@ type Config struct {
 	Name           string
 	Version        string
 	BuildTimestamp string
+	BoltDBName     string
+	FlatFileName   string
 
 	PostgreSQL struct {
 		Host     string
@@ -25,9 +27,11 @@ func NewConfig(name, version, buildTimestamp string) *Config {
 	cfg := &Config{Name: name, Version: version, BuildTimestamp: buildTimestamp}
 	cfg.PostgreSQL.Host = "localhost"
 	cfg.PostgreSQL.Port = "5432"
-	cfg.PostgreSQL.Database = Name
-	cfg.PostgreSQL.User = Name + "app"
+	cfg.PostgreSQL.Database = name
+	cfg.PostgreSQL.User = name + "app"
 	cfg.PostgreSQL.Password = ""
+	cfg.BoltDBName = name + ".db"
+	cfg.FlatFileName = name + ".json"
 	return cfg
 }
 

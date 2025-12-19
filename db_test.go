@@ -2,14 +2,15 @@ package main
 
 import (
 	"context"
+	"log"
 	"testing"
 )
 
 func TestGetUserRegistrations(t *testing.T) {
-	cfg := NewConfig(Name, Version, BuildTimestamp)
-	defer cfg.CleanUp()
+	cfg := NewConfig("nobbydobby", Version, BuildTimestamp)
 
 	db, err := NewPostgresSink(cfg)
+	log.Printf("%+v\n", cfg)
 	if err != nil {
 		t.Fatalf("Could not get db connection: %v", err)
 	}
@@ -19,6 +20,7 @@ func TestGetUserRegistrations(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Could not clean up users table: %v", err)
 		}
+		defer cfg.CleanUp()
 	})
 
 	user := &User{

@@ -128,3 +128,7 @@ func (s *PostgresSink) PutuserRegistration(u *User) error {
 
 	return nil
 }
+
+func (s *PostgresSink) Close() {
+	s.db.Close()
+}
