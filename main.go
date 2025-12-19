@@ -15,11 +15,6 @@ func main() {
 	defer cfg.CleanUp()
 
 	db, err := NewPostgresSink(cfg)
-	if err != nil {
-		log.Printf("Could not get db connection: %v", err)
-		cfg.FatalExit()
-	}
-
 	//db, err := NewFlatFileDB("users.json")
 	if err != nil {
 		log.Printf("Could not get db connection: %v", err)
